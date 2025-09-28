@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">LeanX</string>
+    <string name="title_activity_main">LeanX</string>
+    <string name="package_name">com.david.leanx</string>
+    <string name="custom_url_scheme">com.david.leanx</string>
+</resources>
