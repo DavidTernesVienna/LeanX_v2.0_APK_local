@@ -4,6 +4,16 @@ android {
     namespace "com.david.leanx"
     compileSdk rootProject.ext.compileSdkVersion
 
+    signingConfigs {
+        release {
+            // Keystore liegt eine Ebene über dem app/-Ordner (in android/)
+            storeFile file("../leanx-upload.jks")
+        storePassword System.getenv("LEANX_STORE_PW")
+        keyAlias "leanx-upload"
+        keyPassword System.getenv("LEANX_KEY_PW")
+        }
+    }
+
     defaultConfig {
         applicationId "com.david.leanx"
         minSdkVersion rootProject.ext.minSdkVersion
@@ -25,8 +35,15 @@ android {
     }
 
     buildTypes {
+        // Debug und Release parallel installierbar (unterschiedliche Package-IDs)
+        debug {
+            applicationIdSuffix ".debug"
+            versionNameSuffix "-debug"
+            debuggable true
+        }
         release {
             minifyEnabled false
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -71,16 +88,14 @@ try {
 /* -----------------------------
    Kotlin jvmTarget NUR setzen,
    wenn das Kotlin-Plugin aktiv ist.
-   (Vermeidet „unknown property 'org'“)
+   (vermeidet „unknown property 'org'“)
 ------------------------------*/
 
-// Neuere Plugin-ID
 plugins.withId("org.jetbrains.kotlin.android") {
     tasks.withType((Class) Class.forName("org.jetbrains.kotlin.gradle.tasks.KotlinCompile")).configureEach {
         kotlinOptions { jvmTarget = "17" }
     }
 }
-// Ältere Plugin-ID (Fallback)
 plugins.withId("kotlin-android") {
     tasks.withType((Class) Class.forName("org.jetbrains.kotlin.gradle.tasks.KotlinCompile")).configureEach {
         kotlinOptions { jvmTarget = "17" }
